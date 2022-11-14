@@ -38,7 +38,7 @@ if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
     raise ValueError(
             "Not enough traning or test data for the target model")
 
-for L in [1,10,100]:
+for L in [1]:
     for epsilon in np.arange(0,1,0.1):
         
         model = algo.LogisticRegression_DPSGD()
