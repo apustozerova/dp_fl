@@ -40,6 +40,7 @@ if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
 
 for L in [1,10,100]:
     for epsilon in np.arange(0,1,0.1):
+        
         model = algo.LogisticRegression_DPSGD()
 
         model.n_classes      = n_classes
@@ -49,11 +50,11 @@ for L in [1,10,100]:
         model.tolerance      = 10e-5
         model.DP             = True
         model.L              = L
-        model.epsilon        = epsilon
+        model.epsilon        = round(epsilon,2)
 
 
         X,y = model.init_theta(x_target_train, y_target_train)
-        model.SGD(X,y)
+        model.train(X,y)
         model.evaluate(x_target_train, y_target_train, acc=True)
         model.evaluate(x_target_test, y_target_test, acc=True)
 

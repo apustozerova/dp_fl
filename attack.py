@@ -80,3 +80,24 @@ def attack_evaluation(model, x, y, dev="cpu", extended=False):
     else:
         return acc, pre, rec
 
+def train_shadow_models(number_of_sms,):
+
+    for i in range(number_of_sms):
+        batch_start = i*shadow_batch_size
+        batch_end = (i+1)*shadow_batch_size
+        
+        shadow_model = algo.LogisticRegression_DPSGD()
+
+        shadow_model.n_classes      = n_classes
+        shadow_model.alpha          = 0.001
+        shadow_model.max_iter       = 100*shadow_batch_size
+        shadow_model.lambda_        = 10e-3
+        shadow_model.tolerance      = 10e-5
+        shadow_model.DP             = False
+
+        X,y = shadow_model.init_theta(x_shadow_train[batch_start:batch_end], y_shadow_train[batch_start:batch_end] )
+        shadow_model.SGD(X,y)
+        print('Shadow model: ', i)
+        shadow_model.evaluate(x_shadow_train[batch_start:batch_end], y_shadow_train[batch_start:batch_end])
+        shadow_model.evaluate(x_shadow_test[batch_start:batch_end], y_shadow_test[batch_start:batch_end])
+        s_ms[i] = shadow_model
