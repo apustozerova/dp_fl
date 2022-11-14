@@ -216,7 +216,7 @@ class LogisticRegression_DPSGD(object):
         mini_batch_gradient = 1
         # self.cost = []
         
-        while (current_iter < self.max_iter and np.sqrt(np.sum(mini_batch_gradient ** 2)) > self.tolerance):
+        while (current_iter < self.max_iter*X.shape[0] and np.sqrt(np.sum(mini_batch_gradient ** 2)) > self.tolerance):
 
             randomized_samples = random.sample(range(0,X.shape[0]), self.L) #randomly select the lot/batch with probability L/n, n = X.shape[0]
 
@@ -253,7 +253,7 @@ class LogisticRegression_DPSGD(object):
         self.noise_from_epsilon(X.shape[0]) #calculate noise with given epsilon
         # self.cost = []
         
-        while (current_iter < self.max_iter and np.sqrt(np.sum(noisy_gradient ** 2)) > self.tolerance):
+        while (current_iter < self.max_iter*X.shape[0] and np.sqrt(np.sum(noisy_gradient ** 2)) > self.tolerance):
 
             randomized_samples = random.sample(range(0,X.shape[0]), self.L) #randomly select the lot/batch with probability L/n, n = X.shape[0]
 

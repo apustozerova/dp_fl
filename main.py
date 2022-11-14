@@ -39,7 +39,7 @@ if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
     raise ValueError(
             "Not enough traning or test data for the target model")
 
-for L in [1]:
+for L in [1, 10, 100, 1000]:
     for epsilon in np.arange(0,1,0.1):
         
         
@@ -47,18 +47,18 @@ for L in [1]:
 
         model.n_classes      = n_classes
         model.alpha          = 0.001
-        model.max_iter       = 100*X_train_size
+        model.max_iter       = 100
         model.lambda_        = 1e-5
         model.tolerance      = 1e-5
         model.DP             = True
         model.L              = L
         model.epsilon        = round(epsilon,2)
 
-        tm_path = f'tm/lr{model.alpha}_iter{int(model.max_iter/X_train_size)}_reg{model.lambda_}_DP{model.DP}'
+        tm_path = f'tm/lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
         if model.DP:
             tm_path += f'_eps{model.epsilon}_L{model.L}'
         
-        if not os.path.exists(tm_path):
+        if True: #not os.path.exists(tm_path):
             X,y = model.init_theta(x_target_train, y_target_train)
             model.train(X,y)
             model.evaluate(x_target_train, y_target_train, acc=True)
