@@ -9,6 +9,7 @@ import algo
 
 # from torch import nn,optim
 import torch
+import os
 
 rand_seed=42
 np.random.seed(rand_seed)
@@ -41,29 +42,32 @@ if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
 for L in [1]:
     for epsilon in np.arange(0,1,0.1):
         
+        
         model = algo.LogisticRegression_DPSGD()
 
         model.n_classes      = n_classes
         model.alpha          = 0.001
         model.max_iter       = 100*X_train_size
-        model.lambda_        = 1e-3
-        model.tolerance      = 10e-5
+        model.lambda_        = 1e-5
+        model.tolerance      = 1e-5
         model.DP             = True
         model.L              = L
         model.epsilon        = round(epsilon,2)
 
-
-        X,y = model.init_theta(x_target_train, y_target_train)
-        model.train(X,y)
-        model.evaluate(x_target_train, y_target_train, acc=True)
-        model.evaluate(x_target_test, y_target_test, acc=True)
-
         tm_path = f'tm/lr{model.alpha}_iter{int(model.max_iter/X_train_size)}_reg{model.lambda_}_DP{model.DP}'
         if model.DP:
             tm_path += f'_eps{model.epsilon}_L{model.L}'
-        np.save(tm_path+'_target_model', model.theta)
+        
+        if not os.path.exists(tm_path):
+            X,y = model.init_theta(x_target_train, y_target_train)
+            model.train(X,y)
+            model.evaluate(x_target_train, y_target_train, acc=True)
+            model.evaluate(x_target_test, y_target_test, acc=True)
+            
+            np.save(tm_path+'_target_model', model.theta)
+            print(tm_path)
 
-        print(tm_path)
+           
 #Shadow models
 # s_ms = {}
 # number_of_sms = 10

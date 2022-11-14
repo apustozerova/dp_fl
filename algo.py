@@ -45,12 +45,12 @@ class LogisticRegression_DPSGD(object):
     epsilon: float, default=0.1
         privacy loss
 
-    delta: float, default=0.1
+    delta: float, default=1e-5
         probability of privacy leakage
 
     """
 
-    def __init__(self, n_classes=2, alpha=0.1, max_iter=100, lambda_=0.1, tolerance = 1e-6, DP = False, L=1, C=1, epsilon=0.1, delta=10e-5):
+    def __init__(self, n_classes=2, alpha=0.1, max_iter=100, lambda_=0.1, tolerance = 1e-6, DP = False, L=1, C=1, epsilon=0.1, delta=1e-5):
         self.n_classes      = n_classes
         self.alpha          = alpha
         self.max_iter       = max_iter
