@@ -43,24 +43,12 @@ for rand_seed in [1,3,13,24,42]:
     np.random.seed(rand_seed)
     torch.manual_seed(rand_seed)
 
-    X_train, x_shadow, y_train, y_shadow = train_test_split(X_raw, y_raw, train_size=0.2, random_state=rand_seed)
-    #Target model
-    X_train_size = 10000
-    X_test_size = 10000
-    x_target_train = np.array(X_train[:X_train_size])
-    y_target_train = np.array(y_train[:X_train_size])
-    x_target_test = np.array(X_train[X_train_size:X_train_size+X_test_size])
-    y_target_test = np.array(y_train[X_train_size:X_train_size+X_test_size])
-    if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
-        raise ValueError(
-                "Not enough traning or test data for the target model")
-
-    np.load('data/rs'+str(rand_seed)+'_x_target_train', x_target_train)
-    np.loda('data/rs'+str(rand_seed)+'_y_target_train', y_target_train)
-    np.load('data/rs'+str(rand_seed)+'_x_target_test', x_target_test)
-    np.load('data/rs'+str(rand_seed)+'_y_target_test', y_target_test)
-    np.load('data/rs'+str(rand_seed)+'_x_shadow', np.array(x_shadow))
-    np.load('data/rs'+str(rand_seed)+'_y_shadow', np.array(y_shadow))
+    x_target_train = np.load('data/rs'+str(rand_seed)+'_x_target_train')
+    y_target_train = np.loda('data/rs'+str(rand_seed)+'_y_target_train')
+    x_target_test = np.load('data/rs'+str(rand_seed)+'_x_target_test')
+    y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test')
+    # x_shadow = np.load('data/rs'+str(rand_seed)+'_x_shadow')
+    # y_shadow = np.load('data/rs'+str(rand_seed)+'_y_shadow')
 
     #for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
     for epsilon in [0]:
@@ -69,7 +57,7 @@ for rand_seed in [1,3,13,24,42]:
 
         model.n_classes      = n_classes
         model.alpha          = 0.001
-        model.max_iter       = 100
+        model.max_iter       = 1
         model.lambda_        = 1e-5
         model.tolerance      = 1e-5
         model.DP             = False
