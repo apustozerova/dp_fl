@@ -75,6 +75,8 @@ for rand_seed in [1,3,13,24,42]:
         model.L              = 1
         model.epsilon        = round(epsilon,2)
 
+        params = model.__dict__ #save model's parameters to json file later
+
         tm_path = f'tm/rs'+str(rand_seed)+'lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
         if model.DP:
             tm_path += f'_eps{model.epsilon}_L{model.L}'
@@ -87,7 +89,7 @@ for rand_seed in [1,3,13,24,42]:
             
             np.save(tm_path+'_target_model', model.theta)
             with open(tm_path+'_target_model_params.json', 'w') as file:
-                json.dump(model.__dict__, file)
+                json.dump(params, file)
 
             print(tm_path)
     
