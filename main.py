@@ -62,20 +62,21 @@ for rand_seed in [1,3,13,24,42]:
     np.save('data/rs'+str(rand_seed)+'x_shadow', np.array(x_shadow))
     np.save('data/rs'+str(rand_seed)+'y_shadow', np.array(y_shadow))
 
-    for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
+    # for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
+    for epsilon in [0]:
                
         model = algo.LogisticRegression_DPSGD()
 
         model.n_classes      = n_classes
         model.alpha          = 0.001
-        model.max_iter       = 1
+        model.max_iter       = 100
         model.lambda_        = 1e-5
         model.tolerance      = 1e-5
-        model.DP             = True
+        model.DP             = False
         model.L              = 1
-        model.epsilon        = round(epsilon,2)
+        model.epsilon        = epsilon
 
-        params = model.__dict__ #save model's parameters to json file later
+        params = dict(model.__dict__) #save model's parameters to json file later
 
         tm_path = f'tm/rs'+str(rand_seed)+'lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
         if model.DP:
@@ -84,8 +85,8 @@ for rand_seed in [1,3,13,24,42]:
         if True: #not os.path.exists(tm_path):
             X,y = model.init_theta(x_target_train, y_target_train)
             model.train(X,y)
-            model.evaluate(x_target_train, y_target_train, acc=True)
-            model.evaluate(x_target_test, y_target_test, acc=True)
+            params['train_acc'] = model.evaluate(x_target_train, y_target_train, acc=True)
+            params['test_acc'] = model.evaluate(x_target_test, y_target_test, acc=True)
             
             np.save(tm_path+'_target_model', model.theta)
             with open(tm_path+'_target_model_params.json', 'w') as file:
@@ -93,8 +94,6 @@ for rand_seed in [1,3,13,24,42]:
 
             print(tm_path)
     
-            print("test success")
-            exit()
            
 #Shadow models
 # s_ms = {}
