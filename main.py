@@ -18,8 +18,8 @@ torch.manual_seed(rand_seed)
 raw_data_path = '../datasets/dataset_purchase'
 raw_data = pd.read_csv(raw_data_path)
 y=raw_data['63']
-X=raw_data.drop('63', axis=1)
-y =  y.replace(100, 0)
+X_raw =raw_data.drop('63', axis=1)
+y_raw =  y.replace(100, 0)
 print('Dataset: ', raw_data_path)
 print('Classes in classification task: ', y.nunique())
 n_classes = y.nunique()
@@ -43,7 +43,7 @@ for rand_seed in [1,3,13,24,42]:
     np.random.seed(rand_seed)
     torch.manual_seed(rand_seed)
 
-    X_train, x_shadow, y_train, y_shadow = train_test_split(X, y, train_size=0.2, random_state=rand_seed)
+    X_train, x_shadow, y_train, y_shadow = train_test_split(X_raw, y_raw, train_size=0.2, random_state=rand_seed)
     #Target model
     X_train_size = 10000
     X_test_size = 10000
@@ -55,14 +55,14 @@ for rand_seed in [1,3,13,24,42]:
         raise ValueError(
                 "Not enough traning or test data for the target model")
 
-    np.save('data/rs'+str(rand_seed)+'x_target_train', x_target_train)
-    np.save('data/rs'+str(rand_seed)+'y_target_train', y_target_train)
-    np.save('data/rs'+str(rand_seed)+'x_target_test', x_target_test)
-    np.save('data/rs'+str(rand_seed)+'y_target_test', y_target_test)
-    np.save('data/rs'+str(rand_seed)+'x_shadow', np.array(x_shadow))
-    np.save('data/rs'+str(rand_seed)+'y_shadow', np.array(y_shadow))
+    np.load('data/rs'+str(rand_seed)+'_x_target_train', x_target_train)
+    np.loda('data/rs'+str(rand_seed)+'_y_target_train', y_target_train)
+    np.load('data/rs'+str(rand_seed)+'_x_target_test', x_target_test)
+    np.load('data/rs'+str(rand_seed)+'_y_target_test', y_target_test)
+    np.load('data/rs'+str(rand_seed)+'_x_shadow', np.array(x_shadow))
+    np.load('data/rs'+str(rand_seed)+'_y_shadow', np.array(y_shadow))
 
-    # for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
+    #for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
     for epsilon in [0]:
                
         model = algo.LogisticRegression_DPSGD()
@@ -78,11 +78,12 @@ for rand_seed in [1,3,13,24,42]:
 
         params = dict(model.__dict__) #save model's parameters to json file later
 
-        tm_path = f'tm/rs'+str(rand_seed)+'lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
+        tm_path = f'tm/rs{rand_seed}_lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
         if model.DP:
             tm_path += f'_eps{model.epsilon}_L{model.L}'
         
-        if True: #not os.path.exists(tm_path):
+        if not os.path.exists(tm_path+'_target_model_params.json'):
+            print("Start training")
             X,y = model.init_theta(x_target_train, y_target_train)
             model.train(X,y)
             params['train_acc'] = model.evaluate(x_target_train, y_target_train, acc=True)
@@ -92,8 +93,9 @@ for rand_seed in [1,3,13,24,42]:
             with open(tm_path+'_target_model_params.json', 'w') as file:
                 json.dump(params, file)
 
-            print(tm_path)
-    
+        else:
+            print('Model already exists')
+        print('Model path: ',tm_path)
            
 #Shadow models
 # s_ms = {}
