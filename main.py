@@ -39,15 +39,14 @@ if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
     raise ValueError(
             "Not enough traning or test data for the target model")
 
-np.save('x_target_train', x_target_train)
-np.save('y_target_train', y_target_train)
-np.save('x_target_test', x_target_test)
-np.save('y_target_test', y_target_test)
+#np.save('x_target_train', x_target_train)
+#np.save('y_target_train', y_target_train)
+#np.save('x_target_test', x_target_test)
+#np.save('y_target_test', y_target_test)
 
-exit()
 
-for L in [1, 10, 100, 1000]:
-    for epsilon in [1,5,10]:
+for L in [1]:
+    for epsilon in [1]:
         
         
         model = algo.LogisticRegression_DPSGD()
