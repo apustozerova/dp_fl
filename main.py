@@ -68,14 +68,14 @@ for rand_seed in [1,3,13,24,42]:
 
         model.n_classes      = n_classes
         model.alpha          = 0.001
-        model.max_iter       = 100
+        model.max_iter       = 1
         model.lambda_        = 1e-5
         model.tolerance      = 1e-5
-        model.DP             = False
+        model.DP             = True
         model.L              = 1
         model.epsilon        = round(epsilon,2)
 
-        tm_path = f'tm/lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
+        tm_path = f'tm/rs'+str(rand_seed)+'lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
         if model.DP:
             tm_path += f'_eps{model.epsilon}_L{model.L}'
         
@@ -85,12 +85,14 @@ for rand_seed in [1,3,13,24,42]:
             model.evaluate(x_target_train, y_target_train, acc=True)
             model.evaluate(x_target_test, y_target_test, acc=True)
             
-            np.save(tm_path+'_target_model_rs'+str(rand_seed), model.theta)
-            with open(tm_path+'_target_model_rs'+str(rand_seed)+'_params.json', 'w') as file:
+            np.save(tm_path+'_target_model', model.theta)
+            with open(tm_path+'_target_model_params.json', 'w') as file:
                 json.dump(model.__dict__, file)
 
             print(tm_path)
-
+    
+            print("test success")
+            exit()
            
 #Shadow models
 # s_ms = {}
