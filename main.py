@@ -7,15 +7,14 @@ from sklearn.preprocessing import OneHotEncoder
 import algo
 # import attack
 
-# from torch import nn,optim
 import torch
 import os
+import json
 
 rand_seed=42
 np.random.seed(rand_seed)
 torch.manual_seed(rand_seed)
-        
-
+   
 raw_data_path = '../datasets/dataset_purchase'
 raw_data = pd.read_csv(raw_data_path)
 y=raw_data['63']
@@ -25,30 +24,46 @@ print('Dataset: ', raw_data_path)
 print('Classes in classification task: ', y.nunique())
 n_classes = y.nunique()
 
-X_train, x_shadow, y_train, y_shadow = train_test_split(X, y, train_size=0.2, random_state=rand_seed)
-print(X_train.shape, x_shadow.shape)
+# X_train, x_shadow, y_train, y_shadow = train_test_split(X, y, train_size=0.2, random_state=rand_seed)
+# print(X_train.shape, x_shadow.shape)
 
-#Target model
-X_train_size = 10000
-X_test_size = 10000
-x_target_train = np.array(X_train[:X_train_size])
-y_target_train = np.array(y_train[:X_train_size])
-x_target_test = np.array(X_train[X_train_size:X_train_size+X_test_size])
-y_target_test = np.array(y_train[X_train_size:X_train_size+X_test_size])
-if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
-    raise ValueError(
-            "Not enough traning or test data for the target model")
+# #Target model
+# X_train_size = 10000
+# X_test_size = 10000
+# x_target_train = np.array(X_train[:X_train_size])
+# y_target_train = np.array(y_train[:X_train_size])
+# x_target_test = np.array(X_train[X_train_size:X_train_size+X_test_size])
+# y_target_test = np.array(y_train[X_train_size:X_train_size+X_test_size])
+# if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
+#     raise ValueError(
+#             "Not enough traning or test data for the target model")        
 
-#np.save('x_target_train', x_target_train)
-#np.save('y_target_train', y_target_train)
-#np.save('x_target_test', x_target_test)
-#np.save('y_target_test', y_target_test)
+for rand_seed in [1,3,13,24,42]:
 
+    np.random.seed(rand_seed)
+    torch.manual_seed(rand_seed)
 
-for L in [1]:
-    for epsilon in [1]:
-        
-        
+    X_train, x_shadow, y_train, y_shadow = train_test_split(X, y, train_size=0.2, random_state=rand_seed)
+    #Target model
+    X_train_size = 10000
+    X_test_size = 10000
+    x_target_train = np.array(X_train[:X_train_size])
+    y_target_train = np.array(y_train[:X_train_size])
+    x_target_test = np.array(X_train[X_train_size:X_train_size+X_test_size])
+    y_target_test = np.array(y_train[X_train_size:X_train_size+X_test_size])
+    if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
+        raise ValueError(
+                "Not enough traning or test data for the target model")
+
+    np.save('data/rs'+str(rand_seed)+'x_target_train', x_target_train)
+    np.save('data/rs'+str(rand_seed)+'y_target_train', y_target_train)
+    np.save('data/rs'+str(rand_seed)+'x_target_test', x_target_test)
+    np.save('data/rs'+str(rand_seed)+'y_target_test', y_target_test)
+    np.save('data/rs'+str(rand_seed)+'x_shadow', np.array(x_shadow))
+    np.save('data/rs'+str(rand_seed)+'y_shadow', np.array(y_shadow))
+
+    for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
+               
         model = algo.LogisticRegression_DPSGD()
 
         model.n_classes      = n_classes
@@ -57,7 +72,7 @@ for L in [1]:
         model.lambda_        = 1e-5
         model.tolerance      = 1e-5
         model.DP             = False
-        model.L              = L
+        model.L              = 1
         model.epsilon        = round(epsilon,2)
 
         tm_path = f'tm/lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
@@ -70,7 +85,10 @@ for L in [1]:
             model.evaluate(x_target_train, y_target_train, acc=True)
             model.evaluate(x_target_test, y_target_test, acc=True)
             
-            np.save(tm_path+'_target_model', model.theta)
+            np.save(tm_path+'_target_model_rs'+str(rand_seed), model.theta)
+            with open(tm_path+'_target_model_rs'+str(rand_seed)+'_params.json', 'w') as file:
+                json.dump(model.__dict__, file)
+
             print(tm_path)
 
            

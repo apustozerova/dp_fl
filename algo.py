@@ -42,7 +42,7 @@ class LogisticRegression_DPSGD(object):
     C : float, default=1
         gradient norm bound
 
-    epsilon: float, default=0.1
+    epsilon: float, default=1
         privacy loss
 
     delta: float, default=1e-5
@@ -50,7 +50,7 @@ class LogisticRegression_DPSGD(object):
 
     """
 
-    def __init__(self, n_classes=2, alpha=0.1, max_iter=100, lambda_=0.1, tolerance = 1e-6, DP = False, L=1, C=1, epsilon=0.1, delta=1e-5):
+    def __init__(self, n_classes=2, alpha=0.1, max_iter=100, lambda_=0.1, tolerance = 1e-6, DP = False, L=1, C=1, epsilon=1, delta=1e-5):
         self.n_classes      = n_classes
         self.alpha          = alpha
         self.max_iter       = max_iter
@@ -324,6 +324,8 @@ class LogisticRegression_DPSGD(object):
             print("The accuracy of the model :", round(self.accuracy,3)*100,"%")
         if conf_mat:
             print("Confusion Matrix:\n",self.conf_mat)
+        
+        return self.accuracy
 
 
 
