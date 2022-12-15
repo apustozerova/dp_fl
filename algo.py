@@ -316,13 +316,12 @@ class LogisticRegression_DPSGD(object):
             y_pred_target = [1 if y>0.5 else 0 for y in y_pred] # Convert prediction probabilities to classes with 0.5 decision boundary
         elif len(np.unique(y)) > 2:
             y_pred_target = np.argmax(y_pred, axis=1) # Convert prediction probabilities to classes, assigning class corresponding to a maximum probability
-
-        self.accuracy = accuracy_score(y, y_pred_target,normalize=True)
-        self.conf_mat = confusion_matrix(y, y_pred_target)
+        self.accuracy = accuracy_score(y, y_pred_target,normalize=True)        
             
         if acc:
-            print("The accuracy of the model :", round(self.accuracy,3)*100,"%")
+            print("The accuracy of the model :", round(self.accuracy,3)*100,"%")          
         if conf_mat:
+            self.conf_mat = confusion_matrix(y, y_pred_target)
             print("Confusion Matrix:\n",self.conf_mat)
         
         return self.accuracy
