@@ -5,7 +5,7 @@ def aggregate(clients):
     for i in range(1, len(clients.keys())):
         global_model += clients[i].theta 
 
-    return global_model/3
+    return global_model/len(clients.keys())
 
 def update_clients(clients, global_model):
     

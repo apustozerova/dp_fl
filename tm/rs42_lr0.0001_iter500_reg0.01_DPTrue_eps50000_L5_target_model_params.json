@@ -1,1 +1,1 @@
-{"n_classes": 100, "alpha": 0.0001, "max_iter": 500, "lambda_": 0.01, "tolerance": 1e-05, "DP": true, "L": 5, "C": 1, "epsilon": 50000, "delta": 1e-05, "train_acc": 0.1633, "test_acc": 0.1352}
+{"n_classes": 100, "alpha": 0.0001, "max_iter": 500, "lambda_": 0.01, "tolerance": 1e-05, "DP": true, "L": 5, "C": 1, "epsilon": 50000, "delta": 1e-05, "train_acc": 0.1633, "test_acc": 0.1352, "attack_acc": 0.5, "attack_pre": 0, "attack_rec": 0.0}

@@ -1,7 +1,19 @@
 import torch
 from torch import nn, optim
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
+
+import pandas as pd
 
 
+class Train_args():
+
+    def __init__(self, learning_rate, weight_decay, epoch):
+        self.learning_rate = learning_rate
+        self.weight_decay = weight_decay
+        self.epoch = epoch
+         
 class Net_attack(nn.Module):
 
     def __init__(self, h_neurons, do, input_size):
@@ -24,13 +36,6 @@ class Net_attack(nn.Module):
         x = self.softmax(x)
         return x
 
-class Train_args():
-
-    def __init__(self, learning_rate, weight_decay, epoch):
-        self.learning_rate = learning_rate
-        self.weight_decay = weight_decay
-        self.epoch = epoch
-         
 def train_attack_model(model, train_data, train_target, train_args):
 
     optimizer = optim.Adam(model.parameters(), lr=train_args.learning_rate, weight_decay=train_args.weight_decay)
@@ -43,6 +48,28 @@ def train_attack_model(model, train_data, train_target, train_args):
     optimizer.step()
 
     return model
+
+def train_shadow_models(number_of_sms,):
+
+    for i in range(number_of_sms):
+        batch_start = i*shadow_batch_size
+        batch_end = (i+1)*shadow_batch_size
+        
+        shadow_model = algo.LogisticRegression_DPSGD()
+
+        shadow_model.n_classes      = n_classes
+        shadow_model.alpha          = 0.001
+        shadow_model.max_iter       = 100*shadow_batch_size
+        shadow_model.lambda_        = 10e-3
+        shadow_model.tolerance      = 10e-5
+        shadow_model.DP             = False
+
+        X,y = shadow_model.init_theta(x_shadow_train[batch_start:batch_end], y_shadow_train[batch_start:batch_end] )
+        shadow_model.SGD(X,y)
+        print('Shadow model: ', i)
+        shadow_model.evaluate(x_shadow_train[batch_start:batch_end], y_shadow_train[batch_start:batch_end])
+        shadow_model.evaluate(x_shadow_test[batch_start:batch_end], y_shadow_test[batch_start:batch_end])
+        s_ms[i] = shadow_model
 
 def attack_evaluation(model, x, y, dev="cpu", extended=False):
 
@@ -80,24 +107,81 @@ def attack_evaluation(model, x, y, dev="cpu", extended=False):
     else:
         return acc, pre, rec
 
-def train_shadow_models(number_of_sms,):
+def y_ohe(model, y):
+    if len(np.unique(y)) > 2: #multi class classification
+        ohe = OneHotEncoder(sparse=False)
+        ohe.fit(np.arange(model.n_classes).reshape(-1, 1))
+        y = ohe.transform(y.reshape(-1,1)) #encoode the target values
+    return y
 
-    for i in range(number_of_sms):
-        batch_start = i*shadow_batch_size
-        batch_end = (i+1)*shadow_batch_size
-        
-        shadow_model = algo.LogisticRegression_DPSGD()
+def mi_attack_test(model, a_model, x_target_train, y_target_train, x_target_test, y_target_test):
+    
+    train_pred = model.predict(x_target_train, y_target_train)
+    test_pred = model.predict(x_target_test, y_target_test)
 
-        shadow_model.n_classes      = n_classes
-        shadow_model.alpha          = 0.001
-        shadow_model.max_iter       = 100*shadow_batch_size
-        shadow_model.lambda_        = 10e-3
-        shadow_model.tolerance      = 10e-5
-        shadow_model.DP             = False
+    y_train = y_ohe(model, y_target_train)
+    y_test = y_ohe(model, y_target_test)
 
-        X,y = shadow_model.init_theta(x_shadow_train[batch_start:batch_end], y_shadow_train[batch_start:batch_end] )
-        shadow_model.SGD(X,y)
-        print('Shadow model: ', i)
-        shadow_model.evaluate(x_shadow_train[batch_start:batch_end], y_shadow_train[batch_start:batch_end])
-        shadow_model.evaluate(x_shadow_test[batch_start:batch_end], y_shadow_test[batch_start:batch_end])
-        s_ms[i] = shadow_model
+    # members
+    labels = np.ones(x_target_train.shape[0])
+    # non-members
+    test_labels = np.zeros(x_target_test.shape[0])
+
+    x_1 = np.concatenate((train_pred, test_pred))
+    x_2 = np.concatenate((y_train, y_test))#.reshape((-1, 1))
+    y_new = np.concatenate((labels, test_labels))
+
+    attack_test_data = np.concatenate((x_1,x_2),axis=1)
+    attack_test_target = y_new
+    df = pd.DataFrame(attack_test_data)
+    df['a_target'] = attack_test_target
+    df = df.sample(frac = 1)
+
+    attack_test_data = np.array(df.drop(['a_target'], axis=1))
+    attack_test_target= np.array(df['a_target'])
+
+    attack_test_data = torch.tensor(np.array(df.drop(['a_target'], axis=1)), dtype=torch.float, requires_grad=True)   
+    attack_test_target = torch.tensor(np.array(df['a_target']), dtype=torch.float)
+    
+    test_acc, test_pre, test_rec = attack_evaluation(a_model, attack_test_data, attack_test_target)
+    return test_acc, test_pre, test_rec
+
+def data_shuffle(rand_seed, X_raw, y_raw):
+
+
+    
+    X_train, x_shadow, y_train, y_shadow = train_test_split(X_raw, y_raw, train_size=0.2, random_state=rand_seed)
+#     print(X_train.shape, x_shadow.shape)
+
+    #Target model
+    X_train_size = 10000
+    X_test_size = 10000
+    x_target_train = np.array(X_train[:X_train_size])
+    y_target_train = np.array(y_train[:X_train_size])
+    x_target_test = np.array(X_train[X_train_size:X_train_size+X_test_size])
+    y_target_test = np.array(y_train[X_train_size:X_train_size+X_test_size])
+    if y_target_test.shape[0]<X_test_size or y_target_train.shape[0]<X_train_size:
+        raise ValueError(
+                "Not enough traning or test data for the target model")        
+    return x_target_train, y_target_train, x_target_test, y_target_test
+
+def test_mi_attack(attack_models, target_model, x_target_train, y_target_train, x_target_test, y_target_test):
+    
+    results = {}
+    at_acc = []
+    at_rec = []
+    at_pre = []
+    for am in attack_models:
+        a_model = attack_models[am] 
+        attack_acc, attack_pre, attack_rec = mi_attack_test(target_model, a_model, x_target_train, y_target_train, x_target_test, y_target_test)
+        at_acc.append(attack_acc)
+        at_pre.append(attack_pre)
+        at_rec.append(attack_rec)
+    results['attack_acc_mean'] = np.mean(at_acc)
+    results['attack_acc_std'] = np.std(at_acc)
+    results['attack_pre_mean'] = np.mean(at_pre)
+    results['attack_pre_std'] = np.std(at_pre)
+    results['attack_rec_mean'] = np.mean(at_rec)
+    results['attack_rec_std'] = np.std(at_rec)
+    
+    return results    
