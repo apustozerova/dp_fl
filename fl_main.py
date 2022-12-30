@@ -17,11 +17,12 @@ for rand_seed in [42]: #1,3,13,24,42:
     y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test.npy')
     n_classes = len(np.unique(y_target_train))
 
-    number_of_clients = 8
-    fl_iterations = 5
-    data_per_client = int(x_target_train.shape[0]/number_of_clients)
+    for m_it in [1, 10, 50, 100, 150, 200]:
+    
+        number_of_clients = 2
+        fl_iterations = 10
+        data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
-    for m_it in [1, 10, 50, 100]:
         #create clients with set training parameters and datasets
         clients = {}
         for i in range(number_of_clients):
