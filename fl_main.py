@@ -80,7 +80,8 @@ for rand_seed in [42]: #1,3,13,24,42:
                 gtrain_acc = clients[0].evaluate(x_target_train, y_target_train, acc=True)
                 gtest_acc = clients[0].evaluate(x_target_test, y_target_test, acc=True)
                 results[f'i{iteration}_g'] = (gtrain_acc,  gtest_acc)
-
+                if clients[0].evaluate(x_target_test, y_target_test, acc=True)>=0.56:
+                    break
 
             res = pd.DataFrame.from_dict(results, orient='index')
             res.to_csv(fl_path + f'/results.csv')
