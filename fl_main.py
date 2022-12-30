@@ -34,7 +34,7 @@ for rand_seed in [42]: #1,3,13,24,42:
             clients[i].lambda_        = 1e-5
             clients[i].tolerance      = 1e-5
             clients[i].DP             = False
-            clients[i].L              = 10
+            clients[i].L              = 1 #should be 1 if DP == False
             clients[i].epsilon        = 0
 
             params = dict(clients[0].__dict__)
@@ -82,5 +82,5 @@ for rand_seed in [42]: #1,3,13,24,42:
                 results[f'i{iteration}_g'] = (gtrain_acc,  gtest_acc)
 
 
-        res = pd.DataFrame.from_dict(results, orient='index')
-        res.to_csv(fl_path + f'/results.csv')
+            res = pd.DataFrame.from_dict(results, orient='index')
+            res.to_csv(fl_path + f'/results.csv')
