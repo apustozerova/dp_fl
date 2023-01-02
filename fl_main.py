@@ -17,10 +17,10 @@ for rand_seed in [42]: #1,3,13,24,42:
     y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test.npy')
     n_classes = len(np.unique(y_target_train))
 
-    for m_it in [1, 10, 50, 100, 150, 200]:
+    for m_it in [1, 10, 50, 100, 150]:
     
         number_of_clients = 2
-        fl_iterations = 10
+        fl_iterations = 5
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
         #create clients with set training parameters and datasets
@@ -29,9 +29,9 @@ for rand_seed in [42]: #1,3,13,24,42:
             clients[i] = algo.LogisticRegression_DPSGD()
 
             clients[i].n_classes      = n_classes
-            clients[i].alpha          = 0.001
+            clients[i].alpha          = 0.01
             clients[i].max_iter       = m_it
-            clients[i].lambda_        = 1e-5
+            clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
             clients[i].DP             = False
             clients[i].L              = 1 #should be 1 if DP == False
@@ -80,7 +80,7 @@ for rand_seed in [42]: #1,3,13,24,42:
                 gtrain_acc = clients[0].evaluate(x_target_train, y_target_train, acc=True)
                 gtest_acc = clients[0].evaluate(x_target_test, y_target_test, acc=True)
                 results[f'i{iteration}_g'] = (gtrain_acc,  gtest_acc)
-                if clients[0].evaluate(x_target_test, y_target_test, acc=True)>=0.56:
+                if clients[0].evaluate(x_target_test, y_target_test, acc=True)>=0.55:
                     break
 
             res = pd.DataFrame.from_dict(results, orient='index')
