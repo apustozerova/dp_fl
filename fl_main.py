@@ -33,9 +33,10 @@ for rand_seed in [42]: #1,3,13,24,42:
             clients[i].max_iter       = m_it
             clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
-            clients[i].DP             = False
+            clients[i].DP             = True
             clients[i].L              = 1 #should be 1 if DP == False
-            clients[i].epsilon        = 0
+            clients[i].epsilon        = 100000
+            clients[i].C              = 1.25
 
             params = dict(clients[0].__dict__)
 
@@ -44,7 +45,7 @@ for rand_seed in [42]: #1,3,13,24,42:
 
         fl_path = f'fl/rs{rand_seed}_ncl{number_of_clients}_fiter{fl_iterations}_lr{clients[0].alpha}_iter{clients[0].max_iter}_reg{clients[0].lambda_}_DP{clients[0].DP}'
         if clients[0].DP:
-            fl_path += f'_eps{clients[0].epsilon}_L{clients[0].L}'
+            fl_path += f'_eps{clients[0].epsilon}_L{clients[0].L}_C{clients[0].C}'
 
 
         params.pop('x')

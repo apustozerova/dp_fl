@@ -51,25 +51,25 @@ for rand_seed in [42]: #1,3,13,24,42]:
     # y_shadow = np.load('data/rs'+str(rand_seed)+'_y_shadow')
 
     # for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
-    for lam in [0.005, 0.001, 0.0005, 0.0001, 0.00001]:
+    for C in [0.9, 1.1, 1.3, 1.5]:
                
         model = algo.LogisticRegression_DPSGD()
 
         model.n_classes      = n_classes
-        model.alpha          = 0.001
-        model.max_iter       = 500
-        model.lambda_        = lam
+        model.alpha          = 0.01
+        model.max_iter       = 300
+        model.lambda_        = 1e-5
         model.tolerance      = 1e-5
         model.DP             = True
-        model.L              = 20
+        model.L              = 50
         model.epsilon        = 1000000
-        model.C              = 1.25
+        model.C              = C
 
         params = dict(model.__dict__) #save model's parameters to json file later
 
         tm_path = f'tm/rs{rand_seed}_lr{model.alpha}_iter{model.max_iter}_reg{model.lambda_}_DP{model.DP}'
         if model.DP:
-            tm_path += f'_eps{model.epsilon}_L{model.L}'
+            tm_path += f'_eps{model.epsilon}_L{model.L}_C{model.C}'
         
         if not os.path.exists(tm_path+'_target_model_params.json'):
             print("Start training")
