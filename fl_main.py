@@ -19,7 +19,7 @@ for rand_seed in [42]: #1,3,13,24,42:
 
     for m_it in [1, 10, 50, 100, 150]:
     
-        number_of_clients = 2
+        number_of_clients = 8
         fl_iterations = 5
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
@@ -34,9 +34,9 @@ for rand_seed in [42]: #1,3,13,24,42:
             clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
             clients[i].DP             = True
-            clients[i].L              = 1 #should be 1 if DP == False
+            clients[i].L              = 20 #should be 1 if DP == False
             clients[i].epsilon        = 100000
-            clients[i].C              = 1.25
+            clients[i].C              = 1.7
 
             params = dict(clients[0].__dict__)
 
@@ -81,7 +81,7 @@ for rand_seed in [42]: #1,3,13,24,42:
                 gtrain_acc = clients[0].evaluate(x_target_train, y_target_train, acc=True)
                 gtest_acc = clients[0].evaluate(x_target_test, y_target_test, acc=True)
                 results[f'i{iteration}_g'] = (gtrain_acc,  gtest_acc)
-                if clients[0].evaluate(x_target_test, y_target_test, acc=True)>=0.55:
+                if clients[0].evaluate(x_target_test, y_target_test)>=0.55:
                     break
 
             res = pd.DataFrame.from_dict(results, orient='index')
