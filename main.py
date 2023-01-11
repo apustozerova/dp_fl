@@ -58,7 +58,7 @@ for rand_seed in [42]: #1,3,13,24,42]:
         model.n_classes      = n_classes
         model.alpha          = 0.01
         model.max_iter       = 500
-        model.lambda_        = 0.0001
+        model.lambda_        = 0.001
         model.tolerance      = 1e-5
         model.DP             = True
         model.L              = 50
