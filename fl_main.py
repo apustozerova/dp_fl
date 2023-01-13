@@ -17,9 +17,9 @@ for rand_seed in [42]: #1,3,13,24,42:
     y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test.npy')
     n_classes = len(np.unique(y_target_train))
 
-    for m_it in [100, 150, 200, 300]:
+    for m_it in [10, 50, 100, 150, 200]:
     
-        number_of_clients = 4
+        number_of_clients = 8
         fl_iterations = 5
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
@@ -31,12 +31,12 @@ for rand_seed in [42]: #1,3,13,24,42:
             clients[i].n_classes      = n_classes
             clients[i].alpha          = 0.01
             clients[i].max_iter       = m_it
-            clients[i].lambda_        = 1e-5
+            clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
-            clients[i].DP             = True
-            clients[i].L              = 40 #should be 1 if DP == False
+            clients[i].DP             = False
+            clients[i].L              = 1 #should be 1 if DP == False
             clients[i].epsilon        = 100000
-            clients[i].C              = 2
+            clients[i].C              = 1
 
             params = dict(clients[0].__dict__)
 
