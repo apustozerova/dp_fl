@@ -51,7 +51,7 @@ for rand_seed in [42]: #1,3,13,24,42]:
     # y_shadow = np.load('data/rs'+str(rand_seed)+'_y_shadow')
 
     # for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
-    for C in [3]:
+    for C in [0.5,1,1.3,1.5,1.7,2,2.5,3,4,5]:
                
         model = algo.LogisticRegression_DPSGD()
 
@@ -61,7 +61,7 @@ for rand_seed in [42]: #1,3,13,24,42]:
         model.lambda_        = 0.0001
         model.tolerance      = 1e-5
         model.DP             = True
-        model.L              = 50
+        model.L              = 30
         model.epsilon        = 1000000
         model.C              = C
 
