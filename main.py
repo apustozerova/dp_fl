@@ -50,8 +50,9 @@ for rand_seed in [42]: #1,3,13,24,42]:
     # x_shadow = np.load('data/rs'+str(rand_seed)+'_x_shadow')
     # y_shadow = np.load('data/rs'+str(rand_seed)+'_y_shadow')
 
-    # for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
-    for C in [0.5,1,1.3,1.5,1.7,2,2.5,3,4,5]:
+    #for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
+    for epsilon in [1000, 10000, 100000, 0.5]:
+    #for C in [0.5,1,1.3,1.5,1.7,2,2.5,3,4,5]:
                
         model = algo.LogisticRegression_DPSGD()
 
@@ -61,9 +62,9 @@ for rand_seed in [42]: #1,3,13,24,42]:
         model.lambda_        = 0.0001
         model.tolerance      = 1e-5
         model.DP             = True
-        model.L              = 30
-        model.epsilon        = 1000000
-        model.C              = C
+        model.L              = 50
+        model.epsilon        = epsilon
+        model.C              = 2
 
         params = dict(model.__dict__) #save model's parameters to json file later
 
