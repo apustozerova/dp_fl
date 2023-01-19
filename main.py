@@ -51,19 +51,19 @@ for rand_seed in [42]: #1,3,13,24,42]:
     # y_shadow = np.load('data/rs'+str(rand_seed)+'_y_shadow')
 
     #for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
-    #for epsilon in [1000, 10000, 100000, 0.5]:
-    for L in [1,5,10,20,50,70,100]: 
+    for iters in [10, 50, 100, 200, 300, 400, 500, 600]:
+    #for L in [1,5,10,20,50,70,100]: 
     #for C in [0.5,1,1.3,1.5,1.7,2,2.5,3,4,5]:
                
         model = algo.LogisticRegression_DPSGD()
 
         model.n_classes      = n_classes
         model.alpha          = 0.01
-        model.max_iter       = 500
+        model.max_iter       = iters
         model.lambda_        = 0.0001
         model.tolerance      = 1e-5
         model.DP             = True
-        model.L              = L
+        model.L              = 50
         model.epsilon        = 1000000
         model.C              = 2
 
