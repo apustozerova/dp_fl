@@ -18,10 +18,10 @@ for rand_seed in [42]: #1,3,13,24,42:
     n_classes = len(np.unique(y_target_train))
 
     #for epsilon in [0.1, 0.5, 1, 10, 100, 1000, 10000]:
-    for L in [1, 5, 10, 20, 30, 40]:
+    for lam in [0.0001, 0.000001]:
     
-        number_of_clients = 8
-        fl_iterations = 1
+        number_of_clients = 2
+        fl_iterations = 5
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
         #create clients with set training parameters and datasets
@@ -30,12 +30,12 @@ for rand_seed in [42]: #1,3,13,24,42:
             clients[i] = algo.LogisticRegression_DPSGD()
 
             clients[i].n_classes      = n_classes
-            clients[i].alpha          = 0.01
+            clients[i].alpha          = 0.001
             clients[i].max_iter       = 500
-            clients[i].lambda_        = 0.0001
+            clients[i].lambda_        = lam
             clients[i].tolerance      = 1e-5
             clients[i].DP             = True
-            clients[i].L              = L #should be 1 if DP == False
+            clients[i].L              = 20 #should be 1 if DP == False
             clients[i].epsilon        = 100000
             clients[i].C              = 2
 
