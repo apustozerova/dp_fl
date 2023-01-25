@@ -1,1 +1,0 @@
-{"n_classes": 100, "alpha": 0.01, "max_iter": 300, "lambda_": 1e-05, "tolerance": 1e-05, "DP": true, "L": 40, "C": 2, "epsilon": 100000, "delta": 1e-05}
