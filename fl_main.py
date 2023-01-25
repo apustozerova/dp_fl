@@ -35,7 +35,7 @@ for rand_seed in [42]:
             clients[i].n_classes      = n_classes
             clients[i].alpha          = 0.01
             clients[i].max_iter       = max_iter
-            clients[i].lambda_        = 0.0001
+            clients[i].lambda_        = 1e-5
             clients[i].tolerance      = 1e-5
             clients[i].sgdDP          = False
             clients[i].L              = 1 #should be 1 if DP == False
