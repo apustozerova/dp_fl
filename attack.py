@@ -116,6 +116,10 @@ def y_ohe(model, y):
 
 def mi_attack_test(model, a_model, x_target_train, y_target_train, x_target_test, y_target_test):
     
+    set_size = min(x_target_train.shape[0], x_target_test.shape[0])
+    x_target_train, y_target_train =  x_target_train[:set_size], y_target_train[:set_size]
+    x_target_test, y_target_test = x_target_test[:set_size], y_target_test[:set_size]
+
     train_pred = model.predict(x_target_train, y_target_train)
     test_pred = model.predict(x_target_test, y_target_test)
 

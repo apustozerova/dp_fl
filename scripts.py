@@ -8,7 +8,7 @@ def set_model_params(model, params):
     model.max_iter       = params['max_iter']
     model.lambda_        = params['lambda_']
     model.tolerance      = params['tolerance']
-    model.DP             = params['DP']
+    model.sgdDP          = params['sgdDP']
     model.L              = params['L']
     model.C              = params['C']
     model.epsilon        = params['epsilon']

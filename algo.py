@@ -32,7 +32,7 @@ class LogisticRegression_DPSGD(object):
     lambda_ : float, default=0 (no penaly)
         Regularization parameter lambda - L2 regularization
 
-    DP : bool, default = False
+    sgdDP : bool, default = False
         If False - uses SGD (standart SGD)
         If True  - uses DP_SGD (differentially private SGD)
 
@@ -40,27 +40,31 @@ class LogisticRegression_DPSGD(object):
         lot/batch size for adding the noise to the randomly selected batch with probability L/n, n - number of samples
 
     C : float, default=1
-        gradient norm bound
+        gradient norm bound in DP_SGD
 
     epsilon: float, default=1
-        privacy loss
+        privacy loss in DP_SGD
 
     delta: float, default=1e-5
-        probability of privacy leakage
+        probability of privacy leakage in DP_SGD
+
+    sigma: float, default=0
+        noise in DP_SGD
 
     """
 
-    def __init__(self, n_classes=2, alpha=0.1, max_iter=100, lambda_=0.1, tolerance = 1e-6, DP = False, L=1, C=1, epsilon=1, delta=1e-5):
+    def __init__(self, n_classes=2, alpha=0.1, max_iter=100, lambda_=0.1, tolerance = 1e-6, sgdDP = False, L=1, C=1, epsilon=1, delta=1e-5, sigma=0):
         self.n_classes      = n_classes
         self.alpha          = alpha
         self.max_iter       = max_iter
         self.lambda_        = lambda_
         self.tolerance      = tolerance
-        self.DP             = DP
+        self.sgdDP          = sgdDP
         self.L              = L
         self.C              = C
         self.epsilon        = epsilon
         self.delta          = delta
+        self.sigma          = sigma
        
 
     def predict(self, X, y):
@@ -250,8 +254,9 @@ class LogisticRegression_DPSGD(object):
 
         current_iter = 0
         noisy_gradient = 1
-        self.noise_from_epsilon(X.shape[0]) #calculate noise with given epsilon
         # self.cost = []
+        if self.sigma == 0:
+            self.noise_from_epsilon(X.shape[0]) #calculate noise with given epsilon
         
         while (current_iter < self.max_iter*X.shape[0]/self.L and np.sqrt(np.sum(noisy_gradient ** 2)) > self.tolerance):
 
@@ -291,7 +296,7 @@ class LogisticRegression_DPSGD(object):
             target values
         """
 
-        if self.DP:
+        if self.sgdDP:
             self.DP_SGD(X, y)
         else:
             self.SGD(X, y)
