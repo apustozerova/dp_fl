@@ -9,7 +9,8 @@ import os
 import json
 import random
 
-for rand_seed in [42]:
+rand_seed = 42
+for al, l2 in [(0.001, 0.0001), (0.01, 0.0001), (0.001, 1e-5), (0.01, 1e-5)]:
 
     np.random.seed(rand_seed)
     random.seed(rand_seed)
@@ -33,14 +34,14 @@ for rand_seed in [42]:
             clients[i] = algo.LogisticRegression_DPSGD()
 
             clients[i].n_classes      = n_classes
-            clients[i].alpha          = 0.01
+            clients[i].alpha          = al
             clients[i].max_iter       = max_iter
-            clients[i].lambda_        = 1e-5
+            clients[i].lambda_        = l2
             clients[i].tolerance      = 1e-5
-            clients[i].sgdDP          = False
-            clients[i].L              = 1 #should be 1 if DP == False
-            clients[i].epsilon        = 1
-            clients[i].C              = 1
+            clients[i].sgdDP          = True
+            clients[i].L              = 20 #should be 1 if DP == False
+            clients[i].epsilon        = 1000000
+            clients[i].C              = 2
             clients[i].outDP_local          = False
             clients[i].outDP_local_epsilon  = 1
 #             clients[i].outDP_global         = False #not supported yet
