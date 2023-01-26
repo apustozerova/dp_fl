@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np 
 import pandas as pd
 
 import algo
@@ -22,7 +22,7 @@ for al, l2 in [(0.001, 0.0001), (0.01, 0.0001), (0.001, 1e-5), (0.01, 1e-5)]:
     n_classes = len(np.unique(y_target_train))
 
     #for epsilon in [0.1, 0.5, 1, 10, 100, 1000, 10000]:
-    for max_iter in [1, 5, 10, 50, 100]:
+    for max_iter in [200, 300, 400, 500]:
 
         number_of_clients = 2
         fl_iterations = 5
@@ -39,7 +39,7 @@ for al, l2 in [(0.001, 0.0001), (0.01, 0.0001), (0.001, 1e-5), (0.01, 1e-5)]:
             clients[i].lambda_        = l2
             clients[i].tolerance      = 1e-5
             clients[i].sgdDP          = True
-            clients[i].L              = 20 #should be 1 if DP == False
+            clients[i].L              = 10 #should be 1 if DP == False
             clients[i].epsilon        = 1000000
             clients[i].C              = 2
             clients[i].outDP_local          = False
