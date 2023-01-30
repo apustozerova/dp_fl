@@ -22,7 +22,7 @@ for rand_seed in [42]:
     y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test.npy')
     n_classes = len(np.unique(y_target_train))
 
-    for epsilon in [0.1, 1, 10, 100, 1000, 10000, 100000]:
+    for epsilon in [0.5, 5, 50, 500, 5000, 50000]:
     #for max_iter in [50]:
 
         number_of_clients = 2
@@ -35,7 +35,7 @@ for rand_seed in [42]:
             clients[i] = algo.LogisticRegression_DPSGD()
 
             clients[i].n_classes      = n_classes
-            clients[i].alpha          = 0.01
+            clients[i].alpha          = 0.001
             clients[i].max_iter       = 100
             clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
@@ -83,8 +83,8 @@ for rand_seed in [42]:
                         federated.output_DP_federated(clients[i],  clients[i].x.shape[0], clients[i].outDP_local_epsilon)
                         clients[i].train_acc_outDP_local = clients[i].evaluate(clients[i].x, clients[i].y, acc=True)
                         clients[i].test_acc_outDP_local = clients[i].evaluate(x_target_test, y_target_test, acc=True)
-                        np.save(fl_path + f'/i{iteration}_c{i}', clients[i].theta_before_noise)
-                        np.save(fl_path + f'/i{iteration}_c{i}_outDP', clients[i].theta)
+                        np.save(fl_path + f'/i{iteration}_c{i}_before_DP', clients[i].theta_before_noise)
+                        np.save(fl_path + f'/i{iteration}_c{i}', clients[i].theta)
                         results[f'i{iteration}_c{i}'] = (clients[i].train_acc,  clients[i].test_acc, clients[i].train_acc_outDP_local, clients[i].test_acc_outDP_local)
                     else:
                         np.save(fl_path + f'/i{iteration}_c{i}', clients[i].theta)
