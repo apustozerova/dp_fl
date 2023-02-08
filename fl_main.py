@@ -22,11 +22,11 @@ for rand_seed in [42]:
     y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test.npy')
     n_classes = len(np.unique(y_target_train))
 
-    #for epsilon in [0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000]:
-    for max_iter in [50, 100]:
+    for epsilon in [0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000]:
+    #for n_clients in [4, 8, 16, 32]:
 
-        number_of_clients = 2
-        fl_iterations = 20
+        number_of_clients = 32
+        fl_iterations = 10
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
         #create clients with set training parameters and datasets
@@ -36,7 +36,7 @@ for rand_seed in [42]:
 
             clients[i].n_classes      = n_classes
             clients[i].alpha          = 0.001
-            clients[i].max_iter       = max_iter
+            clients[i].max_iter       = 100
             clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
             clients[i].sgdDP          = False
@@ -44,7 +44,7 @@ for rand_seed in [42]:
             clients[i].epsilon        = 1
             clients[i].C              = 1
             clients[i].outDP_local          = True
-            clients[i].outDP_local_epsilon  = 10
+            clients[i].outDP_local_epsilon  = epsilon
 #             clients[i].outDP_global         = False #not supported yet
 #             clients[i].outDP_global_epsilon = 1 #not supported yet
 
