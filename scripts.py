@@ -32,3 +32,19 @@ def output_DP(model,  X_train_size, epsilon_out_DP, delta_out_DP=1e-5):
     
     return noise_model
 
+def load_purchase(rand_seed):
+    x_target_train = np.load('data/rs'+str(rand_seed)+'_x_target_train.npy')
+    y_target_train = np.load('data/rs'+str(rand_seed)+'_y_target_train.npy')
+    x_target_test = np.load('data/rs'+str(rand_seed)+'_x_target_test.npy')
+    y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test.npy')
+
+    return x_target_train, y_target_train, x_target_test, y_target_test
+
+def load_loan(rand_seed, tr_size):
+
+    x_target_train = np.load(f'data/loan_rs{rand_seed}_size{tr_size}_xtrain.npy')
+    y_target_train = np.load(f'data/loan_rs{rand_seed}_size{tr_size}_ytrain.npy')
+    x_target_test = np.load(f'data/loan_rs{rand_seed}_size{tr_size}_xtest.npy')
+    y_target_test = np.load(f'data/loan_rs{rand_seed}_size{tr_size}_ytest.npy')
+
+    return x_target_train, y_target_train, x_target_test, y_target_test
