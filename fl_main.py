@@ -22,11 +22,16 @@ for rand_seed in [42]:
     y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test.npy')
     n_classes = len(np.unique(y_target_train))
 
+<<<<<<< HEAD
+    #for epsilon in [0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000]:
+    for n_clients in [8, 16, 32]:
+=======
     for epsilon in [0.5, 5, 50, 500, 5000, 50000]:
     #for max_iter in [50]:
+>>>>>>> 2c162586f17ac8bb6425ef8d66b1facfe1250d39
 
-        number_of_clients = 2
-        fl_iterations = 5
+        number_of_clients = n_clients
+        fl_iterations = 10
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
         #create clients with set training parameters and datasets
@@ -39,12 +44,21 @@ for rand_seed in [42]:
             clients[i].max_iter       = 100
             clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
+<<<<<<< HEAD
+            clients[i].sgdDP          = True
+            clients[i].L              = 20 #should be 1 if DP == False
+            clients[i].epsilon        = 100000
+            clients[i].C              = 2
+            clients[i].outDP_local          = False
+            clients[i].outDP_local_epsilon  = 1
+=======
             clients[i].sgdDP          = False
             clients[i].L              = 1 #should be 1 if DP == False
             clients[i].epsilon        = 1
             clients[i].C              = 1
             clients[i].outDP_local          = True
             clients[i].outDP_local_epsilon  = epsilon
+>>>>>>> 2c162586f17ac8bb6425ef8d66b1facfe1250d39
 #             clients[i].outDP_global         = False #not supported yet
 #             clients[i].outDP_global_epsilon = 1 #not supported yet
 
