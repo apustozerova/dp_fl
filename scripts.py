@@ -48,3 +48,12 @@ def load_loan(rand_seed, tr_size):
     y_target_test = np.load(f'data/loan_rs{rand_seed}_size{tr_size}_ytest.npy')
 
     return x_target_train, y_target_train, x_target_test, y_target_test
+
+def load_texas():
+
+    x_target_train = np.load(f'data/texas_x_target_train.npy')
+    y_target_train = np.load(f'data/texas_y_target_train.npy')
+    x_target_test = np.load(f'data/texas_x_target_test.npy')
+    y_target_test = np.load(f'data/texas_y_target_test.npy')
+
+    return x_target_train, y_target_train, x_target_test, y_target_test

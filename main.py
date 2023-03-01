@@ -16,32 +16,32 @@ rand_seed=42
 np.random.seed(rand_seed)
 torch.manual_seed(rand_seed)
 
-dataset = 'loan'
+dataset = 'texas'
 # x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_purchase(rand_seed)
-x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_loan(rand_seed, tr_size=10000)
+#x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_loan(rand_seed, tr_size=10000)
+x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_texas()
     
 # for rand_seed in [42]: #1,3,13,24,42]:
-for L in [1, 5, 10, 50, 100]:
+for iter in [10, 50, 100]:
 
     np.random.seed(rand_seed)
     torch.manual_seed(rand_seed)
     
     #for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
-    # for lam in [0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001]:
-    for C in [1, 1.5, 2, 3]: 
+    for lam in [1e-6, 1e-4, 1e-2]:
     #for C in [0.5,1,1.3,1.5,1.7,2,2.5,3,4,5]:
                
         model = algo.LogisticRegression_DPSGD()
 
-        model.n_classes      = len(np.unique(y_target_test))
+        model.n_classes      = len(np.unique(y_target_train))
         model.alpha          = 0.01
-        model.max_iter       = 100
-        model.lambda_        = 1e-6
+        model.max_iter       = iter
+        model.lambda_        = lam
         model.tolerance      = 1e-5
-        model.sgdDP          = True
-        model.L              = L #should be 1 if DP == False
-        model.epsilon        = 10000
-        model.C              = C
+        model.sgdDP          = False
+        model.L              = 1 #should be 1 if DP == False
+        model.epsilon        = 1
+        model.C              = 1
         model.outDP_local          = False
         model.outDP_local_epsilon  = 1
 
