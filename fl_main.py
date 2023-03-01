@@ -28,7 +28,7 @@ for rand_seed in [42]:
     #for max_iter in [50]:
 
         number_of_clients = n_clients
-        fl_iterations = 10
+        fl_iterations = 15
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
         #create clients with set training parameters and datasets
@@ -38,7 +38,7 @@ for rand_seed in [42]:
 
             clients[i].n_classes      = n_classes
             clients[i].alpha          = 0.01
-            clients[i].max_iter       = 100
+            clients[i].max_iter       = 300
             clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
             clients[i].sgdDP          = True
