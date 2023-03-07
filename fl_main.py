@@ -27,7 +27,7 @@ for rand_seed in [42]:
     #for epsilon in [0.5, 5, 50, 500, 5000, 50000]:
     #for max_iter in [50]:
 
-        number_of_clients = 4
+        number_of_clients = 32
         fl_iterations = 10
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
@@ -38,15 +38,15 @@ for rand_seed in [42]:
 
             clients[i].n_classes      = n_classes
             clients[i].alpha          = 0.01
-            clients[i].max_iter       = 200
+            clients[i].max_iter       = 100
             clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
-            clients[i].sgdDP          = True
-            clients[i].L              = 20 #should be 1 if DP == False
-            clients[i].epsilon        = epsilon
-            clients[i].C              = 2
-            clients[i].outDP_local          = False
-            clients[i].outDP_local_epsilon  = 1
+            clients[i].sgdDP          = False
+            clients[i].L              = 1 #should be 1 if DP == False
+            clients[i].epsilon        = 1
+            clients[i].C              = 1
+            clients[i].outDP_local          = True
+            clients[i].outDP_local_epsilon  = epsilon
 #             clients[i].outDP_global         = False #not supported yet
 #             clients[i].outDP_global_epsilon = 1 #not supported yet
 
