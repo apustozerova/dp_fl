@@ -22,20 +22,20 @@ dataset = 'texas'
 x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_texas()
     
 # for rand_seed in [42]: #1,3,13,24,42]:
-for L in [1, 5, 10, 20, 50]:
+for L in [20, 1, 5, 10, 20]:
 
     np.random.seed(rand_seed)
     torch.manual_seed(rand_seed)
     
     #for epsilon in [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,5,10,30,50,70,100]:
     #for lam in [1e-6, 1e-4, 1e-2]:
-    for C in [1,1.5,2,3,4,5]:
+    for C in [1, 5, 10]:
                
         model = algo.LogisticRegression_DPSGD()
 
         model.n_classes      = len(np.unique(y_target_train))
         model.alpha          = 0.01
-        model.max_iter       = 50
+        model.max_iter       = 100
         model.lambda_        = 1e-4
         model.tolerance      = 1e-5
         model.sgdDP          = True
