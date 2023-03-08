@@ -26,16 +26,7 @@ for rand_seed in [42]:
     #for n_clients in [64, 128]:
     for C in [1]:
 
-<<<<<<< HEAD
         number_of_clients = 2
-=======
-    for epsilon in [0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000]:
-    #for n_clients in [32]:
-    #for epsilon in [0.5, 5, 50, 500, 5000, 50000]:
-    #for max_iter in [50]:
-
-        number_of_clients = 32
->>>>>>> 653077ac18d657c9d0c6c620f472b5ba9669a000
         fl_iterations = 10
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
@@ -46,25 +37,15 @@ for rand_seed in [42]:
 
             clients[i].n_classes      = len(np.unique(y_target_test))
             clients[i].alpha          = 0.01
-<<<<<<< HEAD
             clients[i].max_iter       = 1
             clients[i].lambda_        = 1e-6
             clients[i].tolerance      = 1e-6
-=======
-            clients[i].max_iter       = 100
-            clients[i].lambda_        = 0.0001
-            clients[i].tolerance      = 1e-5
->>>>>>> 653077ac18d657c9d0c6c620f472b5ba9669a000
             clients[i].sgdDP          = False
             clients[i].L              = 1 #should be 1 if DP == False
             clients[i].epsilon        = 1
             clients[i].C              = 1
             clients[i].outDP_local          = True
-<<<<<<< HEAD
             clients[i].outDP_local_epsilon  = 1
-=======
-            clients[i].outDP_local_epsilon  = epsilon
->>>>>>> 653077ac18d657c9d0c6c620f472b5ba9669a000
 #             clients[i].outDP_global         = False #not supported yet
 #             clients[i].outDP_global_epsilon = 1 #not supported yet
 
