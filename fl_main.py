@@ -10,24 +10,32 @@ import json
 import random
 
 rand_seed = 42
+dataset = 'texas'
+# x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_purchase(rand_seed)
+# x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_loan(rand_seed, tr_size=10000)
+x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_texas()
+
 #for al, l2 in [(0.001, 0.0001), (0.01, 0.0001), (0.001, 1e-5), (0.01, 1e-5)]:
-#for l2 in [0.0001, 1e-5]:
+#for iter in [10, 50, 100, 200]:
 for rand_seed in [42]:
+#for n_clients in [64,128]:
     np.random.seed(rand_seed)
     random.seed(rand_seed)
 
-    x_target_train = np.load('data/rs'+str(rand_seed)+'_x_target_train.npy')
-    y_target_train = np.load('data/rs'+str(rand_seed)+'_y_target_train.npy')
-    x_target_test = np.load('data/rs'+str(rand_seed)+'_x_target_test.npy')
-    y_target_test = np.load('data/rs'+str(rand_seed)+'_y_target_test.npy')
-    n_classes = len(np.unique(y_target_train))
+    #for epsilon in [0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000]:
+    #for n_clients in [64, 128]:
+    for C in [1]:
 
+<<<<<<< HEAD
+        number_of_clients = 2
+=======
     for epsilon in [0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000]:
     #for n_clients in [32]:
     #for epsilon in [0.5, 5, 50, 500, 5000, 50000]:
     #for max_iter in [50]:
 
         number_of_clients = 32
+>>>>>>> 653077ac18d657c9d0c6c620f472b5ba9669a000
         fl_iterations = 10
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
@@ -36,17 +44,27 @@ for rand_seed in [42]:
         for i in range(number_of_clients):
             clients[i] = algo.LogisticRegression_DPSGD()
 
-            clients[i].n_classes      = n_classes
+            clients[i].n_classes      = len(np.unique(y_target_test))
             clients[i].alpha          = 0.01
+<<<<<<< HEAD
+            clients[i].max_iter       = 1
+            clients[i].lambda_        = 1e-6
+            clients[i].tolerance      = 1e-6
+=======
             clients[i].max_iter       = 100
             clients[i].lambda_        = 0.0001
             clients[i].tolerance      = 1e-5
+>>>>>>> 653077ac18d657c9d0c6c620f472b5ba9669a000
             clients[i].sgdDP          = False
             clients[i].L              = 1 #should be 1 if DP == False
             clients[i].epsilon        = 1
             clients[i].C              = 1
             clients[i].outDP_local          = True
+<<<<<<< HEAD
+            clients[i].outDP_local_epsilon  = 1
+=======
             clients[i].outDP_local_epsilon  = epsilon
+>>>>>>> 653077ac18d657c9d0c6c620f472b5ba9669a000
 #             clients[i].outDP_global         = False #not supported yet
 #             clients[i].outDP_global_epsilon = 1 #not supported yet
 
@@ -55,7 +73,7 @@ for rand_seed in [42]:
             clients[i].x = x_target_train[i*data_per_client:(i+1)*data_per_client]
             clients[i].y = y_target_train[i*data_per_client:(i+1)*data_per_client]
 
-        fl_path = f'fl/rs{rand_seed}_ncl{number_of_clients}_fiter{fl_iterations}_lr{clients[0].alpha}_iter{clients[0].max_iter}_reg{clients[0].lambda_}'
+        fl_path = f'{dataset}/fl/rs{rand_seed}_ncl{number_of_clients}_fiter{fl_iterations}_lr{clients[0].alpha}_iter{clients[0].max_iter}_reg{clients[0].lambda_}'
         if clients[0].sgdDP:
             fl_path += f'_sgdDP{clients[0].sgdDP}_eps{clients[0].epsilon}_L{clients[0].L}_C{clients[0].C}'
         if clients[i].outDP_local:
