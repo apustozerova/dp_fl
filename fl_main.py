@@ -16,8 +16,8 @@ dataset = 'texas'
 x_target_train, y_target_train, x_target_test, y_target_test = scripts.load_texas()
 
 #for al, l2 in [(0.001, 0.0001), (0.01, 0.0001), (0.001, 1e-5), (0.01, 1e-5)]:
-for iter in [10, 50, 100]:
-#for rand_seed in [42]:
+#for iter in [10, 50, 100, 200]:
+for rand_seed in [42]:
 #for n_clients in [64,128]:
     np.random.seed(rand_seed)
     random.seed(rand_seed)
@@ -26,13 +26,8 @@ for iter in [10, 50, 100]:
     #for n_clients in [64, 128]:
     for C in [1]:
 
-<<<<<<< HEAD
         number_of_clients = 2
         fl_iterations = 10
-=======
-        number_of_clients = 4
-        fl_iterations = 5
->>>>>>> e1f03df5953ead627e12097d747968af9c141a8a
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
         #create clients with set training parameters and datasets
@@ -42,23 +37,14 @@ for iter in [10, 50, 100]:
 
             clients[i].n_classes      = len(np.unique(y_target_test))
             clients[i].alpha          = 0.01
-<<<<<<< HEAD
             clients[i].max_iter       = 1
             clients[i].lambda_        = 1e-6
-=======
-            clients[i].max_iter       = iter
-            clients[i].lambda_        = 1e-4
->>>>>>> e1f03df5953ead627e12097d747968af9c141a8a
             clients[i].tolerance      = 1e-6
             clients[i].sgdDP          = False
             clients[i].L              = 1 #should be 1 if DP == False
             clients[i].epsilon        = 1
             clients[i].C              = 1
-<<<<<<< HEAD
             clients[i].outDP_local          = True
-=======
-            clients[i].outDP_local          = False
->>>>>>> e1f03df5953ead627e12097d747968af9c141a8a
             clients[i].outDP_local_epsilon  = 1
 #             clients[i].outDP_global         = False #not supported yet
 #             clients[i].outDP_global_epsilon = 1 #not supported yet
