@@ -22,9 +22,9 @@ for rand_seed in [42]:
     np.random.seed(rand_seed)
     random.seed(rand_seed)
 
-    for epsilon in [0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000]:
+    #for epsilon in [0.1, 0.5, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000]:
     #for n_clients in [64, 128]:
-    #for C in [2]:
+    for C in [2]:
 
         number_of_clients = 4
         fl_iterations = 10
@@ -36,16 +36,16 @@ for rand_seed in [42]:
             clients[i] = algo.LogisticRegression_DPSGD()
 
             clients[i].n_classes      = len(np.unique(y_target_test))
-            clients[i].alpha          = 0.01
+            clients[i].alpha          = 0.001
             clients[i].max_iter       = 100
-            clients[i].lambda_        = 1e-6
+            clients[i].lambda_        = 1e-4
             clients[i].tolerance      = 1e-6
-            clients[i].sgdDP          = True
-            clients[i].L              = 20 #should be 1 if DP == False
-            clients[i].epsilon        = epsilon
-            clients[i].C              = 2
-            clients[i].outDP_local          = False
-            clients[i].outDP_local_epsilon  = 1
+            clients[i].sgdDP          = False
+            clients[i].L              = 1 #should be 1 if DP == False
+            clients[i].epsilon        = 1
+            clients[i].C              = 1
+            clients[i].outDP_local          = True
+            clients[i].outDP_local_epsilon  = 10000
 #             clients[i].outDP_global         = False #not supported yet
 #             clients[i].outDP_global_epsilon = 1 #not supported yet
 
