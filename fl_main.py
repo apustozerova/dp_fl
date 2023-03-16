@@ -26,7 +26,7 @@ for rand_seed in [42]:
     #for n_clients in [64, 128]:
     for C in [2]:
 
-        number_of_clients = 4
+        number_of_clients = 32
         fl_iterations = 10
         data_per_client = int(x_target_train.shape[0]/number_of_clients)
 
